@@ -7,26 +7,28 @@ from pymongo import MongoClient
 load_dotenv(find_dotenv())
 password = os.environ.get('MONGODB_PWD')
 url="mongodb+srv://mahagn118:{}@moviecluster.sdfmk.mongodb.net/moviedb?retryWrites=true&w=majority&appName=moviecluster".format(password)
+
 # MongoDB connection setup
 client = MongoClient(url)
-# print(client, ' -----------')
+
 db = client['moviedb']
 collection = db['tmovie']
 
-# for mov in collection.find({"language": "tamil"}):
-    # print(mov)
 
-movies = []
-for mov in collection.find({"language": 'tamil'}):
-    movies.append(mov)
+# movies = []
+# # Assigning movie data to movies
+# for mov in collection.find({"language": 'tamil'}):
+#     movies.append(mov)
 
 # Initialize VADER sentiment analyzer
 analyzer = SentimentIntensityAnalyzer()
 
+# fetching movies from db to movies
 def fetch_movies():
     movies = collection.find({"language": "tamil"}).to_list(length=None)
     return movies
 
+# calculates avg sentiment
 def analyze_sentiment(movie):
     reviews = movie.get('review', [])
     total_score = sum(analyzer.polarity_scores(review)['compound'] for review in reviews)
@@ -34,10 +36,11 @@ def analyze_sentiment(movie):
     movie['avg_sentiment'] = avg_sentiment
     return movie
 
+# ranks all the movies based on it sentiment  and sorts them from assending to descending 
 def rank_movies():
     # Step 1: Fetch movies
     movies = fetch_movies()
-    print("-------------- inside rank movies -------------")
+    # print("-------------- inside rank movies -------------")
     # Step 2: Perform sentiment analysis concurrently
     ranked_movies =[analyze_sentiment(movie) for movie in movies]
 

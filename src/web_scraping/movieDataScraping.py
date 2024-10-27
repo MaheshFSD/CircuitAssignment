@@ -15,8 +15,8 @@ def get_tmovie_links():
     
     return movie_links
 
-def scrape_movie_data(movie_url):
     # this fun is uded to get all the individual tamil movies data and reviews
+def scrape_movie_data(movie_url):
 
     tmovie_data = {}
     tmovie_page = requests.get(movie_url)
@@ -40,6 +40,7 @@ def scrape_movie_data(movie_url):
     
     return tmovie_data
 
+# creaing all movie data with meta data and reviews
 def scrape_all_movie_data_reviews():
     all_movie_data = []
     
